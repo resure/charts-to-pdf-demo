@@ -8,16 +8,38 @@ export interface ChartSeries {
   data: [number, number][]; // [timestamp, value]
 }
 
+export interface PieChartSegment {
+  name: string;
+  value: number;
+  color?: string;
+}
+
 export interface ChartData {
   title: string;
   subtitle?: string;
   series: ChartSeries[];
+  pieData?: PieChartSegment[];
+  description?: string;
+  links?: { label: string; url: string }[];
 }
 
 // Mock data for demonstration
 export const chartData: ChartData = {
   title: "Monthly Revenue Growth",
   subtitle: "Comparison between 2024 and 2025",
+  description:
+    "Our revenue has shown consistent growth over the past two years. The 2025 projections indicate a 25% increase compared to 2024, driven by new product launches and market expansion.",
+  links: [
+    { label: "Full Report", url: "https://example.com/report" },
+    { label: "Documentation", url: "https://example.com/docs" },
+  ],
+  pieData: [
+    { name: "Product A", value: 35 },
+    { name: "Product B", value: 25 },
+    { name: "Product C", value: 20 },
+    { name: "Product D", value: 12 },
+    { name: "Other", value: 8 },
+  ],
   series: [
     {
       name: "2024",

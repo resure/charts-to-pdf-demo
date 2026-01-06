@@ -1,4 +1,4 @@
-import type { ChartData } from "../charts/chartData";
+import type { ChartData, PieChartSegment } from "../charts/chartData";
 
 export interface PptxChartSeries {
   name: string;
@@ -30,4 +30,14 @@ export function convertChartData(data: ChartData): PptxChartSeries[] {
       values,
     };
   });
+}
+
+export function convertPieChartData(pieData: PieChartSegment[]): PptxChartSeries[] {
+  return [
+    {
+      name: "Distribution",
+      labels: pieData.map((segment) => segment.name),
+      values: pieData.map((segment) => segment.value),
+    },
+  ];
 }
