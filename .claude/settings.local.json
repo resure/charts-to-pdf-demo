@@ -4,7 +4,9 @@
       "Bash(pnpm dev)",
       "Bash(cat:*)",
       "Bash(pkill:*)",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm lint:*)"
     ]
   }
 }
