@@ -60,20 +60,23 @@ export const ExportButton: React.FC<ExportButtonProps> = ({data, slideRef}) => {
     };
 
     return (
-        <div style={{display: 'flex', justifyContent: 'center', gap: '16px', padding: '20px'}}>
-            <Button size="xl" view="action" onClick={handleExportPptx} loading={loadingPptx}>
-                Export to PPTX
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '16px',
+                padding: '20px',
+                flexWrap: 'wrap',
+            }}
+        >
+            <Button size="xl" view="normal" onClick={handleExportPptx} loading={loadingPptx}>
+                Export to PPTX (native)
             </Button>
-            <Button size="xl" view="outlined-action" onClick={handleExportPdf} loading={loadingPdf}>
+            <Button size="xl" view="normal" onClick={handleExportPptxAlt} loading={loadingPptxAlt}>
+                Export to PPTX (charts as images)
+            </Button>
+            <Button size="xl" view="normal" onClick={handleExportPdf} loading={loadingPdf}>
                 Export to PDF
-            </Button>
-            <Button
-                size="xl"
-                view="outlined"
-                onClick={handleExportPptxAlt}
-                loading={loadingPptxAlt}
-            >
-                Export to PPTX (alternate)
             </Button>
         </div>
     );

@@ -1,12 +1,21 @@
 .slide-container {
-    aspect-ratio: 16 / 9;
-    max-width: 960px;
-    width: 90vw;
+    /* Fixed dimensions - slide always renders at this size */
+    width: 960px;
+    height: 540px; /* 16:9 ratio */
     background: #fff;
     padding: 40px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    margin: 40px auto;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+    transform-origin: top left;
+}
+
+/* Wrapper to handle scaling and centering */
+
+.slide-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
 }

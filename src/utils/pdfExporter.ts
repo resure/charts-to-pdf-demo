@@ -75,6 +75,14 @@ function extractTextElements(element: HTMLElement): TextInfo[] {
 }
 
 export async function exportToPDF(slideElement: HTMLElement): Promise<void> {
+    // Temporarily remove scale transform to capture at full size
+    const originalTransform = slideElement.style.transform;
+    slideElement.style.transform = 'none';
+
+    // Force reflow to ensure layout is recalculated
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    slideElement.offsetHeight;
+
     // Extract links and text before rendering to canvas
     const links = extractLinks(slideElement);
     const textElements = extractTextElements(slideElement);
@@ -86,6 +94,9 @@ export async function exportToPDF(slideElement: HTMLElement): Promise<void> {
         useCORS: true,
         backgroundColor: '#ffffff',
     });
+
+    // Restore original transform
+    slideElement.style.transform = originalTransform;
 
     // Create PDF with 16:9 aspect ratio (landscape)
     // eslint-disable-next-line new-cap

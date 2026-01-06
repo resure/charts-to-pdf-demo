@@ -68,6 +68,14 @@ export async function exportToPPTXWithImages(
     data: ChartData,
     slideElement: HTMLElement,
 ): Promise<void> {
+    // Temporarily remove scale transform to capture at full size
+    const originalTransform = slideElement.style.transform;
+    slideElement.style.transform = 'none';
+
+    // Force reflow to ensure layout is recalculated
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    slideElement.offsetHeight;
+
     // eslint-disable-next-line new-cap
     const pptx = new pptxgen();
 
@@ -198,6 +206,9 @@ export async function exportToPPTXWithImages(
             h: pos.h,
         });
     }
+
+    // Restore original transform
+    slideElement.style.transform = originalTransform;
 
     // Download the file
     await pptx.writeFile({fileName: 'presentation-styled.pptx'});
