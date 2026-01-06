@@ -4,6 +4,7 @@ import type {ChartData} from '../charts/chartData';
 import {exportToPPTX} from '../utils/pptxExporter';
 import {exportToPDF} from '../utils/pdfExporter';
 import {exportToPPTXWithImages} from '../utils/pptxImageExporter';
+import {exportToPNG} from '../utils/pngExporter';
 
 interface ExportButtonProps {
     data: ChartData;
@@ -14,6 +15,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({data, slideRef}) => {
     const [loadingPptx, setLoadingPptx] = useState(false);
     const [loadingPdf, setLoadingPdf] = useState(false);
     const [loadingPptxAlt, setLoadingPptxAlt] = useState(false);
+    const [loadingPng, setLoadingPng] = useState(false);
 
     const handleExportPptx = async () => {
         setLoadingPptx(true);
@@ -59,6 +61,22 @@ export const ExportButton: React.FC<ExportButtonProps> = ({data, slideRef}) => {
         }
     };
 
+    const handleExportPng = async () => {
+        if (!slideRef?.current) {
+            alert('Slide element not found');
+            return;
+        }
+        setLoadingPng(true);
+        try {
+            await exportToPNG(slideRef.current);
+        } catch (error) {
+            console.error('Error exporting to PNG:', error);
+            alert('Failed to export PNG. Please check the console for details.');
+        } finally {
+            setLoadingPng(false);
+        }
+    };
+
     return (
         <div
             style={{
@@ -77,6 +95,9 @@ export const ExportButton: React.FC<ExportButtonProps> = ({data, slideRef}) => {
             </Button>
             <Button size="xl" view="normal" onClick={handleExportPdf} loading={loadingPdf}>
                 Export to PDF
+            </Button>
+            <Button size="xl" view="normal" onClick={handleExportPng} loading={loadingPng}>
+                Export to PNG
             </Button>
         </div>
     );
