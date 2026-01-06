@@ -2,30 +2,52 @@ import React, { useState } from "react";
 import { Button } from "@gravity-ui/uikit";
 import type { ChartData } from "../charts/chartData";
 import { exportToPPTX } from "../utils/pptxExporter";
+import { exportToPDF } from "../utils/pdfExporter";
 
 interface ExportButtonProps {
   data: ChartData;
+  slideRef?: React.RefObject<HTMLDivElement>;
 }
 
-export const ExportButton: React.FC<ExportButtonProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false);
+export const ExportButton: React.FC<ExportButtonProps> = ({ data, slideRef }) => {
+  const [loadingPptx, setLoadingPptx] = useState(false);
+  const [loadingPdf, setLoadingPdf] = useState(false);
 
-  const handleExport = async () => {
-    setLoading(true);
+  const handleExportPptx = async () => {
+    setLoadingPptx(true);
     try {
       await exportToPPTX(data);
     } catch (error) {
       console.error("Error exporting to PPTX:", error);
-      alert("Failed to export presentation. Please check the console for details.");
+      alert("Failed to export PPTX. Please check the console for details.");
     } finally {
-      setLoading(false);
+      setLoadingPptx(false);
+    }
+  };
+
+  const handleExportPdf = async () => {
+    if (!slideRef?.current) {
+      alert("Slide element not found");
+      return;
+    }
+    setLoadingPdf(true);
+    try {
+      await exportToPDF(slideRef.current);
+    } catch (error) {
+      console.error("Error exporting to PDF:", error);
+      alert("Failed to export PDF. Please check the console for details.");
+    } finally {
+      setLoadingPdf(false);
     }
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
-      <Button size="xl" view="action" onClick={handleExport} loading={loading}>
+    <div style={{ display: "flex", justifyContent: "center", gap: "16px", padding: "20px" }}>
+      <Button size="xl" view="action" onClick={handleExportPptx} loading={loadingPptx}>
         Export to PPTX
+      </Button>
+      <Button size="xl" view="outlined-action" onClick={handleExportPdf} loading={loadingPdf}>
+        Export to PDF
       </Button>
     </div>
   );

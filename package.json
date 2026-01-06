@@ -13,6 +13,8 @@
     "@gravity-ui/chartkit": "^7.31.2",
     "@gravity-ui/charts": "^1.28.2",
     "@gravity-ui/uikit": "^7.29.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.0.0",
     "pptxgenjs": "^4.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
