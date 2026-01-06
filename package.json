@@ -6,8 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "lint": "pnpm run lint:js && pnpm run lint:styles && pnpm run lint:prettier",
+    "lint:js": "eslint .",
+    "lint:styles": "stylelint 'src/**/*.{css,scss}'",
+    "lint:prettier": "prettier --check '**/*.{json,md,yaml,yml}'",
+    "format": "pnpm run format:js && pnpm run format:styles && pnpm run format:prettier",
+    "format:js": "eslint . --fix",
+    "format:styles": "stylelint 'src/**/*.{css,scss}' --fix",
+    "format:prettier": "prettier --write '**/*.{json,md,yaml,yml}'",
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "@gravity-ui/chartkit": "^7.31.2",
@@ -21,6 +29,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@gravity-ui/eslint-config": "^4.2.0",
+    "@gravity-ui/prettier-config": "^1.1.0",
+    "@gravity-ui/stylelint-config": "^5.0.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
@@ -29,8 +40,25 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "postcss": "^8.5.6",
+    "prettier": "^3.7.4",
+    "stylelint": "^16.26.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4"
+  },
+  "lint-staged": {
+    "*.{css,scss}": [
+      "stylelint --fix --quiet"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --quiet",
+      "prettier --write"
+    ],
+    "*.{json,md,yaml,yml}": [
+      "prettier --write"
+    ]
   }
 }
