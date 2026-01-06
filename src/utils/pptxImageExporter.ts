@@ -9,6 +9,14 @@ interface ElementPosition {
     h: number;
 }
 
+interface TextStyles {
+    fontSize: number;
+    color: string;
+    bold: boolean;
+    fontFace: string;
+    align: 'left' | 'center' | 'right' | 'justify';
+}
+
 function getRelativePosition(
     element: Element,
     container: HTMLElement,
@@ -24,6 +32,36 @@ function getRelativePosition(
         w: elemRect.width * scaleX,
         h: elemRect.height * scaleY,
     };
+}
+
+function getComputedTextStyles(element: Element): TextStyles {
+    const computed = window.getComputedStyle(element);
+
+    // Convert px to pt (1px ≈ 0.75pt)
+    const fontSizePx = parseFloat(computed.fontSize);
+    const fontSize = Math.round(fontSizePx * 0.75);
+
+    // Convert rgb/rgba to hex
+    const rgbMatch = computed.color.match(/\d+/g);
+    let color = '000000';
+    if (rgbMatch && rgbMatch.length >= 3) {
+        const r = parseInt(rgbMatch[0], 10).toString(16).padStart(2, '0');
+        const g = parseInt(rgbMatch[1], 10).toString(16).padStart(2, '0');
+        const b = parseInt(rgbMatch[2], 10).toString(16).padStart(2, '0');
+        color = `${r}${g}${b}`;
+    }
+
+    const fontWeight = parseInt(computed.fontWeight, 10) || 400;
+    const bold = fontWeight >= 700;
+
+    // Extract font family (first one, clean up quotes)
+    const fontFace = computed.fontFamily.split(',')[0].replace(/["']/g, '').trim();
+
+    // Extract text alignment
+    const textAlign = computed.textAlign as 'left' | 'center' | 'right' | 'justify';
+    const align = ['left', 'center', 'right', 'justify'].includes(textAlign) ? textAlign : 'left';
+
+    return {fontSize, color, bold, fontFace, align};
 }
 
 export async function exportToPPTXWithImages(
@@ -57,14 +95,17 @@ export async function exportToPPTXWithImages(
     const titleEl = slideElement.querySelector('[data-element="title"]');
     if (titleEl) {
         const pos = getRelativePosition(titleEl, slideElement, scaleX, scaleY);
+        const styles = getComputedTextStyles(titleEl);
         slide.addText(data.title, {
             x: pos.x,
             y: pos.y,
             w: pos.w,
             h: pos.h,
-            fontSize: 28,
-            bold: true,
-            color: '363636',
+            fontSize: styles.fontSize,
+            bold: styles.bold,
+            color: styles.color,
+            fontFace: styles.fontFace,
+            align: styles.align,
             valign: 'top',
         });
     }
@@ -73,13 +114,16 @@ export async function exportToPPTXWithImages(
     const subtitleEl = slideElement.querySelector('[data-element="subtitle"]');
     if (data.subtitle && subtitleEl) {
         const pos = getRelativePosition(subtitleEl, slideElement, scaleX, scaleY);
+        const styles = getComputedTextStyles(subtitleEl);
         slide.addText(data.subtitle, {
             x: pos.x,
             y: pos.y,
             w: pos.w,
             h: pos.h,
-            fontSize: 14,
-            color: '666666',
+            fontSize: styles.fontSize,
+            color: styles.color,
+            fontFace: styles.fontFace,
+            align: styles.align,
             valign: 'top',
         });
     }
@@ -88,13 +132,16 @@ export async function exportToPPTXWithImages(
     const descriptionEl = slideElement.querySelector('[data-element="description"]');
     if (data.description && descriptionEl) {
         const pos = getRelativePosition(descriptionEl, slideElement, scaleX, scaleY);
+        const styles = getComputedTextStyles(descriptionEl);
         slide.addText(data.description, {
             x: pos.x,
             y: pos.y,
             w: pos.w,
             h: pos.h,
-            fontSize: 11,
-            color: '444444',
+            fontSize: styles.fontSize,
+            color: styles.color,
+            fontFace: styles.fontFace,
+            align: styles.align,
             valign: 'top',
         });
     }
@@ -107,13 +154,16 @@ export async function exportToPPTXWithImages(
         linkElements.forEach((linkEl, index) => {
             if (index < data.links!.length) {
                 const pos = getRelativePosition(linkEl, slideElement, scaleX, scaleY);
+                const styles = getComputedTextStyles(linkEl);
                 slide.addText(data.links![index].label, {
                     x: pos.x,
                     y: pos.y,
                     w: pos.w * 1.5,
                     h: pos.h,
-                    fontSize: 11,
-                    color: '0066CC',
+                    fontSize: styles.fontSize,
+                    color: styles.color,
+                    fontFace: styles.fontFace,
+                    align: styles.align,
                     hyperlink: {url: data.links![index].url},
                     valign: 'top',
                 });
