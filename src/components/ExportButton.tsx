@@ -7,7 +7,7 @@ import {exportToPPTXWithImages} from '../utils/pptxImageExporter';
 
 interface ExportButtonProps {
     data: ChartData;
-    slideRef?: React.RefObject<HTMLDivElement>;
+    slideRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export const ExportButton: React.FC<ExportButtonProps> = ({data, slideRef}) => {
